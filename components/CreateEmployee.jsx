@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { addEmployee } from '../slices/employeeSlice';
 import Select from './Select';
 import config from '../data/config.json';
+import { XMarkIcon } from '@heroicons/react/20/solid';
 
 const CreateEmployee = (props) => {
 	const dispatch = useDispatch();
@@ -20,7 +21,34 @@ const CreateEmployee = (props) => {
 	});
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		dispatch(addEmployee(employee));
+		if (
+			employee.firstName &&
+			employee.lastName &&
+			employee.street &&
+			employee.city &&
+			employee.state &&
+			employee.zip &&
+			employee.dob &&
+			employee.startDate &&
+			employee.department
+		) {
+			dispatch(addEmployee(employee));
+			setEmployee({
+				firstName: '',
+				lastName: '',
+				street: '',
+				city: '',
+				state: '',
+				zip: '',
+				dob: '',
+				startDate: '',
+				department: '',
+			});
+			props.setOpen(false);
+		}
+	};
+	const handleClose = () => {
+		props.setOpen(false);
 		setEmployee({
 			firstName: '',
 			lastName: '',
@@ -32,7 +60,6 @@ const CreateEmployee = (props) => {
 			startDate: '',
 			department: '',
 		});
-		props.setOpen(false);
 	};
 
 	return (
@@ -40,7 +67,8 @@ const CreateEmployee = (props) => {
 			{props.isOpen ? (
 				<>
 					<div className='absolute z-20 grid grid-cols-1 content-center justify-items-center bg-gray-500/80 h-screen w-full '>
-						<div className='bg-white w-9/12 rounded-md p-10'>
+						<div className='bg-white w-9/12 rounded-md p-10 relative '>
+							<XMarkIcon className='w-10 h-10 absolute top-5 right-5 cursor-pointer' onClick={handleClose} />
 							<div className='py-10 px-6 sm:px-10 lg:col-span-2 xl:p-12'>
 								<h3 className='text-xl font-medium text-warm-gray-900 border-b-2 border-spacing-2'>Create Employee</h3>
 								<form className='mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8'>
