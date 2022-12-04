@@ -1,10 +1,6 @@
 import { ChevronDownIcon, ChevronUpIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 
-function classNames(...classes) {
-	return classes.filter(Boolean).join(' ');
-}
-
 export default function DataTable(props) {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
