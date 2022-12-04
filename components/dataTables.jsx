@@ -1,11 +1,15 @@
-import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import { ChevronDownIcon, ChevronUpIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 
-export default function DataTable(props) {
-	const data = props.data;
+function classNames(...classes) {
+	return classes.filter(Boolean).join(' ');
+}
 
+export default function DataTable(props) {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
+
+	const [data, setData] = useState(props.data);
 
 	const [search, setSearch] = useState('');
 
@@ -13,7 +17,39 @@ export default function DataTable(props) {
 	const firstPostIndex = lastPostIndex - rowsPerPage;
 	const currentPosts = data.slice(firstPostIndex, lastPostIndex);
 
+	const [selectedFilter, setSelectedFilter] = useState(false);
+
 	const totalPage = Math.ceil(data.length / rowsPerPage) || 1;
+
+	const handleASC = (key) => {
+		const sorted = [...data].sort((a, b) => {
+			if (a[key] < b[key]) {
+				setSelectedFilter(key + 'ASC');
+				return -1;
+			}
+			if (a[key] > b[key]) {
+				setSelectedFilter(key + 'ASC');
+				return 1;
+			}
+			return 0;
+		});
+		setData(sorted);
+	};
+
+	const handleDESC = (key) => {
+		const sorted = [...data].sort((a, b) => {
+			if (a[key] > b[key]) {
+				setSelectedFilter(key + 'DESC');
+				return -1;
+			}
+			if (a[key] < b[key]) {
+				setSelectedFilter(key + 'DESC');
+				return 1;
+			}
+			return 0;
+		});
+		setData(sorted);
+	};
 
 	return (
 		<div className='mt-8'>
@@ -70,11 +106,24 @@ export default function DataTable(props) {
 												key={index}
 												scope='col'
 												className='py-5 pl-4 pr-3 text-center text-sm font-semibold text-gray-900 sm:pl-6 whitespace-nowrap '>
-												<a href='#' className='group inline-flex '>
+												<a href='#' className='group inline-flex items-center '>
 													{header.name}
-													<span className='ml-2 flex-none rounded text-gray-400'>
-														<ChevronDownIcon className='h-5 w-5' aria-hidden='true' />
-													</span>
+													<div className='ml-2 flex-none rounded group text-gray-400 '>
+														<ChevronUpIcon
+															className={header.key + 'ASC' === selectedFilter ? 'h-5 w-5 text-black' : 'h-5 w-5 text-gray-400'}
+															aria-hidden='true'
+															onClick={() => {
+																handleASC(header.key);
+															}}
+														/>
+														<ChevronDownIcon
+															className={header.key + 'DESC' === selectedFilter ? 'h-5 w-5 text-black' : 'h-5 w-5 text-gray-400'}
+															aria-hidden='true'
+															onClick={() => {
+																handleDESC(header.key);
+															}}
+														/>
+													</div>
 												</a>
 											</th>
 										))}
@@ -93,9 +142,7 @@ export default function DataTable(props) {
 											.map((data, index) => (
 												<tr key={index}>
 													{props.headers.map((header, index) => (
-														<td
-															key={index}
-															className='py-4 pl-4 pr-3 whitespace-nowrap text-sm font-medium text-gray-900 sm:pl-6'>
+														<td key={index} className='py-4 pl-4 pr-3  text-sm font-medium text-gray-900 sm:pl-6'>
 															{data[header.key]}
 														</td>
 													))}
