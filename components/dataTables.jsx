@@ -1,11 +1,15 @@
 import { ChevronDownIcon, ChevronUpIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function DataTable(props) {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
 
 	const [data, setData] = useState(props.data);
+
+	useEffect(() => {
+		setData(props.data);
+	}, [props.data]);
 
 	const [search, setSearch] = useState('');
 
@@ -164,7 +168,8 @@ export default function DataTable(props) {
 				<div className='flex flex-row space-x-10 items-center'>
 					<button
 						type='button'
-						className='p-2 bg-gray-800 rounded-lg text-white w-20'
+						className='p-2 bg-gray-800 rounded-lg text-white w-20  disabled:bg-gray-100 disabled:text-gray-400'
+						disabled={currentPage === 1}
 						onClick={() => {
 							if (currentPage > 1) {
 								setCurrentPage(currentPage - 1);
@@ -175,7 +180,8 @@ export default function DataTable(props) {
 					<div>page 1 of {totalPage}</div>
 					<button
 						type='button'
-						className=' w-20 p-2 bg-gray-800 rounded-lg text-white '
+						className='w-20 p-2 bg-gray-800 rounded-lg text-white disabled:bg-gray-100 disabled:text-gray-400'
+						disabled={currentPage === totalPage}
 						onClick={() => {
 							if (currentPage < totalPage) {
 								setCurrentPage(currentPage + 1);
