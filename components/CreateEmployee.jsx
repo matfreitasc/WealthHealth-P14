@@ -21,31 +21,20 @@ const CreateEmployee = (props) => {
 	});
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		if (
-			employee.firstName &&
-			employee.lastName &&
-			employee.street &&
-			employee.city &&
-			employee.state &&
-			employee.zip &&
-			employee.dob &&
-			employee.startDate &&
-			employee.department
-		) {
-			dispatch(addEmployee(employee));
-			setEmployee({
-				firstName: '',
-				lastName: '',
-				street: '',
-				city: '',
-				state: '',
-				zip: '',
-				dob: '',
-				startDate: '',
-				department: '',
-			});
-			props.setOpen(false);
-		}
+
+		dispatch(addEmployee(employee));
+		setEmployee({
+			firstName: '',
+			lastName: '',
+			street: '',
+			city: '',
+			state: '',
+			zip: '',
+			dob: '',
+			startDate: '',
+			department: '',
+		});
+		props.setOpen(false);
 	};
 	const handleClose = () => {
 		props.setOpen(false);
